@@ -1,3 +1,4 @@
+import { ProductParameterService } from './product-parameter.service';
 import { CriteriaComponent } from './../shared/criteria.component';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
@@ -12,13 +13,12 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
     pageTitle: string = 'Product List';
-    showImage: boolean;
+    //showImage: boolean; using getter and setter
     imageWidth: number = 50;
     imageMargin: number = 2;
     errorMessage: string;
     includeDetail: boolean = true
 
-    @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
     parentListFilter: string;
     //private _sub: Subscription;
 
@@ -35,10 +35,19 @@ export class ProductListComponent implements OnInit, AfterViewInit {
         this.performFilter(this._listFilter);
     }*/
 
+    get showImage(): boolean {
+        return this.productParameterService.showImage;
+    }
+
+    set showImage(value: boolean) {
+        this.productParameterService.showImage = value;
+    }
+
     filteredProducts: IProduct[];
     products: IProduct[];
+    @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
 
-    constructor(private productService: ProductService) { }
+    constructor(private productService: ProductService, private productParameterService: ProductParameterService) { }
 
     ngAfterViewInit(): void {
         this.parentListFilter = this.filterComponent.listFilter;
@@ -48,7 +57,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
         this.productService.getProducts().subscribe(
             (products: IProduct[]) => {
                 this.products = products;
-                this.performFilter(this.parentListFilter);
+                this.filterComponent.listFilter = this.productParameterService.filterBy;
             },
             (error: any) => this.errorMessage = <any>error
         );
@@ -68,6 +77,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     }
 
     onValueChange(value: string): void {
+        this.productParameterService.filterBy = value;
         this.performFilter(value);
     }
 }

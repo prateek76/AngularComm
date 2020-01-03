@@ -1,3 +1,4 @@
+import { ProductParameterService } from './product-parameter.service';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -30,7 +31,8 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
   ],
   providers: [
     ProductService,
-    ProductEditGuard
+    ProductEditGuard,
+    ProductParameterService
   ]
 })
 export class ProductModule { }
