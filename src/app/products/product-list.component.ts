@@ -66,4 +66,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
             this.filteredProducts = this.products;
         }
     }
+
+    onValueChange(value: string): void {
+        this.performFilter(value);
+    }
 }
